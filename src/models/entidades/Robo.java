@@ -1,4 +1,4 @@
-package model.entidades;
+package models.entidades;
 
 public class Robo extends Base {
 	private String direcao;

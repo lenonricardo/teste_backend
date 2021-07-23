@@ -1,4 +1,4 @@
-package model.entidades;
+package models.entidades;
 
 public abstract class Base {
 	private Integer posicaoX;

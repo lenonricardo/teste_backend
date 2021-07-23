@@ -1,16 +1,24 @@
-package model.direcao;
+package models.direcao;
 
-public class Oeste extends Movimento {
+public class Oeste extends Direcao {
+
+	public Oeste(Integer roboX, Integer roboY) {
+		super(roboX, roboY);
+	}
 
 	public void movimentarX(Integer posicaoX, Integer canteiroX, Boolean girar) {
 		if (girar) {
 			this.movimentos += posicaoX < canteiroX ? "DD" : "";
-			this.roboDirecao = posicaoX < canteiroX ? "O" : "";
+
+			if(posicaoX < canteiroX) {
+				this.roboDirecao = "L";
+			}
 		} else {
 			while(posicaoX != canteiroX) {
 				this.movimentos += "M";
 				posicaoX--;
 			}
+			this.roboX = posicaoX;
 		}
 	}
 

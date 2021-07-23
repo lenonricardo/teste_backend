@@ -3,20 +3,30 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import model.entidades.Canteiro;
-import model.entidades.Movimentacao;
-import model.entidades.Robo;
+import models.entidades.Canteiro;
+import models.entidades.Movimentacao;
+import models.entidades.Robo;
+
+import util.Funcoes;
 
 public class App {
     public static void main(String[] args) throws Exception {
 			String direcoes[] = {"N", "S", "L", "O"};
 			Scanner input = new Scanner(System.in);
+			List<Canteiro> canteiros = new ArrayList<Canteiro>();
+			List<Integer> canteiroInput = new ArrayList<Integer>();
+			List<Integer> tamanhoHorta = new ArrayList<Integer>();
+			List<Integer> posicaoRobo = new ArrayList<Integer>();
 
-			System.out.println("Informe a largura da Horta: ");
-			String larguraHorta = input.nextLine();
+			System.out.println("Informe a largura e altura da Horta: (Exemplo: 4,5)");
+			String horta = input.nextLine();
 
-			System.out.println("Informe a altura da Horta: ");
-			String alturaHorta = input.nextLine();
+			while(!Funcoes.validarInput(horta)) {
+				System.out.println("Valor inválido! Informe no formato: Altura, Largura");
+				horta = input.nextLine();
+			}
+
+			tamanhoHorta = Funcoes.splitStringToInteger(horta);
 
 			System.out.println("Informe a direção do Robô (N, S, L, O): ");
 			String direcao = input.nextLine();
@@ -26,29 +36,36 @@ public class App {
 				direcao = input.nextLine();
 			}
 
-			System.out.println("Informe a posição X inicial do Robô: ");
-			String roboX = input.nextLine();
 
-			System.out.println("Informe a posição Y inicial do Robô: ");
-			String roboY = input.nextLine();
+			System.out.println("Informe a posição X inicial do Robô: (Exemplo: 3,2)");
+			String roboInput = input.nextLine();
 
-			System.out.println("Os canteiros a serem Irrigados - (pressione S para sair): ");
+			while(!Funcoes.validarPosicaoRobo(roboInput, tamanhoHorta)) {
+				roboInput = input.nextLine();
+			}
+
+			posicaoRobo = Funcoes.splitStringToInteger(roboInput);
+
+			System.out.println("Os canteiros a serem Irrigados - (pressione C para continuar): ");
 			System.out.println("Formato de entrada: Posição X, Posição Y (Exemplo: 3,2) ");
 			String canteiro = input.nextLine();
 
-			String[] canteiroInput = canteiro.split(",");
-			List<Canteiro> canteiros = new ArrayList<Canteiro>();
+			while(!canteiro.equals("C")) {
+				if (Funcoes.validarInput(canteiro)) {
+					canteiroInput = Funcoes.splitStringToInteger(canteiro);
+					canteiros.add(new Canteiro(canteiroInput.get(0), canteiroInput.get(1)));
+				} else {
+					System.out.println("O valor informado não segue o formato: Inteiro, Inteiro");
+				}
 
-			while(!canteiro.equals("S")) {
-				canteiros.add(new Canteiro(Integer.parseInt(canteiroInput[0]), Integer.parseInt(canteiroInput[1])));
 				canteiro = input.nextLine();
 			}
 
-			Robo robo = new Robo(Integer.parseInt(roboX), Integer.parseInt(roboY), direcao);
+			input.close();
 
-			for (Canteiro c : canteiros) {
-				Movimentacao movimentacao = new Movimentacao();
-				movimentacao.movimentar(robo, c);
-			}
+			Robo robo = new Robo(posicaoRobo.get(0), posicaoRobo.get(1), direcao);
+
+			Movimentacao movimentacao = new Movimentacao();
+			movimentacao.movimentar(robo, canteiros);
     }
 }
